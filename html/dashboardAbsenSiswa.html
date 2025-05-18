@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Absensi Siswa - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            position: relative;
+            min-height: 100vh;
+            transition: margin-right 0.3s;
+        }
+        .body-shifted {
+            margin-right: 250px;
+        }
+        .container {
+            padding: 20px;
+        }
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .menu-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            color: #555;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+        .menu-item.active {
+            background-color: #e0f0ff;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .menu-item i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: #2ecc71;
+        }
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+        }
+        .search-container select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            outline: none;
+        }
+        .search-container button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            transition: right 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        .sidebar.open {
+            right: 0;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        .sidebar-menu li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        .sidebar-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s;
+        }
+        .sidebar-menu a:hover {
+            color: #3498db;
+        }
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #3d5166;
+        }
+        .hamburger {
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #ecf0f1;
+            background-color: #34495e;
+            margin-bottom: 20px;
+        }
+        .user-role {
+            margin-left: 8px;
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+        }
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <header>
+        <h2>Absen</h2>
+        <div class="hamburger" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu Navigasi</h3>
+        </div>
+        <div class="user-info">
+            <span>Login sebagai:</span>
+            <span class="user-role"></span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboardRiwayatAbsenSiswa.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li><a href="../opening/login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 Sistem Absensi</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="menu-wrapper">
+            <a href="dashboardRiwayatAbsenSiswa.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                Dashboard
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <table id="siswa-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>NIS</th>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Status</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="siswa-tbody">
+                        <!-- ini js -->
+                    </tbody>
+                </table>            
+            </div>
+        </div>
+    </div>
+    <script>
+    const hamburger = document.getElementById('hamburger-btn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const body = document.body;
+
+    hamburger.addEventListener('click', function() {
+        sidebar.classList.toggle('open');
+        overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+        body.classList.toggle('body-shifted');
+    });
+
+    overlay.addEventListener('click', function() {
+        sidebar.classList.remove('open');
+        overlay.style.display = 'none';
+        body.classList.remove('body-shifted');
+    });
+
+    // Fungsi untuk fetch data absensi berdasarkan NIS
+    function fetchData(nis) {
+    const apiUrl = `http://localhost:3000/api/riwayat-absensi?nis=${encodeURIComponent(nis)}`;
+
+    fetch(apiUrl, {
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.error('Response error:', response.status, text);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Data dari API:', data);
+        const tbody = document.querySelector('#siswa-tbody');
+        tbody.innerHTML = '';
+
+        if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Tidak ada data absensi</td></tr>`;
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const tanggalFormatted = new Date(item.tanggal).toLocaleDateString('id-ID');
+            const badgeClass = getBadgeClass(item.status_kehadiran);
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${tanggalFormatted}</td>
+                    <td>${item.nis}</td>
+                    <td>${item.nama || item.nama_lengkap || ''}</td>
+                    <td>${item.kelas}</td>
+                    <td><span class="badge badge-${badgeClass}">${item.status_kehadiran}</span></td>
+                    <td>${item.keterangan || '-'}</td>
+                </tr>
+            `;
+        });
+    })
+    .catch(err => {
+        console.error('Gagal mengambil data:', err);
+        const tbody = document.querySelector('#siswa-tbody');
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Gagal mengambil data absensi</td></tr>`;
+    });
+}
+
+
+    function getBadgeClass(status) {
+      switch (status.toLowerCase()) {
+        case 'hadir': return 'success';
+        case 'izin': return 'warning';
+        case 'sakit': return 'info';
+        case 'alpha': return 'danger';
+        default: return 'secondary';
+      }
+    }
+
+
+    function formatRole(role) {
+        if (!role) return '';
+        return role.charAt(0).toUpperCase() + role.slice(1);
+    }
+
+    function setupLogout() {
+        const logoutLink = document.querySelector('.sidebar-menu li a[href="../opening/login.html"]');
+        if (!logoutLink) return;
+
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            fetch('http://localhost:3000/api/logout', {
+                method: 'POST',
+                credentials: 'include'
+            }).finally(() => {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = '../opening/login.html';
+            });
+        });
+    }
+
+    function checkAuthAndDisplayUser() {
+        const userDataStr = localStorage.getItem('user');
+        if (!userDataStr) {
+            window.location.href = '../opening/login.html';
+            return;
+        }
+
+        try {
+            const userData = JSON.parse(userDataStr);
+            const userRoleElement = document.querySelector('.user-role');
+            if (userRoleElement) {
+                const displayName = userData.fullname || userData.name || userData.username || 'User';
+                userRoleElement.textContent = `${displayName} (${formatRole(userData.role)})`;
+            }
+            setupLogout();
+        } catch (e) {
+            console.error('Error:', e);
+            window.location.href = '../opening/login.html';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        checkAuthAndDisplayUser();
+        // Panggil fetchData dengan NIS yang sesuai (contoh)
+        fetchData('20012012111');
+    });
+</script>
+</body>
+</html>

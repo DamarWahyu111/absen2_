@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Absensi Siswa - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            position: relative;
+            min-height: 100vh;
+            transition: margin-right 0.3s;
+        }
+        .body-shifted {
+            margin-right: 250px;
+        }
+        .container {
+            padding: 20px;
+        }
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .menu-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            color: #555;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+        .menu-item.active {
+            background-color: #e0f0ff;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .menu-item i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: #2ecc71;
+        }
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+        }
+        .search-container select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            outline: none;
+        }
+        .search-container button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            transition: right 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        .sidebar.open {
+            right: 0;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        .sidebar-menu li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        .sidebar-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s;
+        }
+        .sidebar-menu a:hover {
+            color: #3498db;
+        }
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #3d5166;
+        }
+        .hamburger {
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #ecf0f1;
+            background-color: #34495e;
+            margin-bottom: 20px;
+        }
+        .user-role {
+            margin-left: 8px;
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <header>
+        <h2>Sistem Absensi Siswa</h2>
+        <div class="hamburger" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu Navigasi</h3>
+        </div>
+        <div class="user-info">
+            <span>Login sebagai:</span>
+            <span class="user-role"></span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboardSiswa.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li><a href="absensiSiswa.html"><i class="fa fa-calendar-check"></i> Absensi Siswa</a></li>
+            <li><a href="riwayatAbsensi.html"><i class="fa fa-history"></i> Riwayat Absensi</a></li>
+            <li><a href="#"><i class="fa fa-users"></i> Manajemen Siswa</a></li>
+            <li><a href="#"><i class="fa fa-building"></i> Manajemen Kelas</a></li>
+            <li><a href="../opening/login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 Sistem Absensi</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="menu-wrapper">
+            <a href="dashboardSiswa.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                Dashboard
+            </a>
+            <a href="absensiSiswa.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                Absensi Siswa
+            </a>
+            <a href="riwayatAbsensi.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                Riwayat Absensi
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Daftar Siswa</h3>
+                <a href="tambahSiswa.html" class="btn btn-success">Tambah Siswa</a>
+            </div>
+            <div class="card-body">
+                <div class="search-container">
+                    <select id="kelas-filter">
+                        <option value="">Pilih Kelas...</option>
+                        <option value="X-A">X-A</option>
+                        <option value="X-B">X-B</option>
+                        <option value="XI-A">XI-A</option>
+                        <option value="XI-B">XI-B</option>
+                        <option value="XII-A">XII-A</option>
+                        <option value="XII-B">XII-B</option>
+                    </select>
+                    <button id="search-btn" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                        Cari
+                    </button>
+                </div>
+                <table id="siswa-table">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>NIS</th>
+                        <th>Nama</th>
+                        <th>Kelas</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                      </tr>
+                      
+                    </thead>
+                    <tbody id="siswa-tbody">
+                        <!-- dari js -->
+                    </tbody>
+                </table>                  
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { // -> eksekusi seluruh struktur HTML
+            const params = new URLSearchParams(window.location.search);
+            const updatedNis = params.get('nis');
+            const hasUpdate = params.get('update') === 'true';
+
+            loadSiswaData(hasUpdate, updatedNis);
+            if (hasUpdate) showUpdateNotification();
+        });
+        // Toggle sidebar functionality
+        const hamburger = document.getElementById('hamburger-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const body = document.body;
+
+        hamburger.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+            body.classList.toggle('body-shifted');
+        });
+
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            overlay.style.display = 'none';
+            body.classList.remove('body-shifted');
+        });
+
+        // Filter students by class
+        document.getElementById('search-btn').addEventListener('click', function() {
+            const kelasFilter = document.getElementById('kelas-filter').value;
+            const table = document.getElementById('siswa-table');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const kelas = rows[i].getElementsByTagName('td')[3].textContent;
+                if (kelasFilter === '' || kelas === kelasFilter) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+
+        const BASE_URL = 'https://project-damarq2ccos4.et.r.appspot.com';
+        // Delete confirmation handler
+        function confirmDelete(nis) {
+            if (confirm("Yakin ingin menghapus siswa dengan NIS " + nis + "?")) {
+                // Show loading indicator if available
+                const loadingIndicator = document.getElementById('loading');
+                if (loadingIndicator) loadingIndicator.style.display = 'flex';
+                
+                fetch(`${BASE_URL}/api/dashboard-siswa/${nis}`, {
+                    method: 'DELETE',
+                    credentials: 'include'  // Kirim cookie JWT
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Server responded with status: ' + res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    alert(data.message || 'Data siswa berhasil dihapus');
+                    // Clear URL parameters before reload
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error("Gagal menghapus:", err);
+                    alert("Terjadi kesalahan saat menghapus: " + err.message);
+                })
+                .finally(() => {
+                    if (loadingIndicator) loadingIndicator.style.display = 'none';
+                });
+            }
+        }
+
+
+        // Load siswa data
+        function loadSiswaData(_, updatedNis = null) {
+            const token = localStorage.getItem('token');
+
+            const tbody = document.getElementById('siswa-tbody');
+            const loading = document.getElementById('loading');
+            loading && (loading.style.display = 'flex');
+
+            tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>Memuat data...</td></tr>";
+
+            fetch(`${BASE_URL}/api/dashboard-siswa`, {
+                credentials: 'include'  // Kirim cookie JWT
+                })                
+                .then(response => {
+                        if (!response.ok) {
+                            if (response.status === 401) {
+                                alert('Anda belum login atau sesi Anda sudah habis. Silakan login ulang.');
+                                localStorage.removeItem('user');
+                                window.location.href = '../opening/login.html';
+                                return;
+                            }
+                            throw new Error('Server responded with status: ' + response.status);
+                        }
+                        return response.json();
+                    })                
+                .then(data => {
+                    console.log("Data siswa:", data);  
+                    populateTable(data.data);  // memanggil data.data jika respons berupa objek
+                    if (updatedNis) highlightUpdatedRow(updatedNis);
+                })
+                .catch(err => {
+                    console.error("Error fetch data:", err);
+                    tbody.innerHTML = `<tr><td colspan='7' style='text-align:center;color:red;'>${err.message}</td></tr>`;
+                })
+                .finally(() => {
+                    if (loading) loading.style.display = 'none';
+                });
+        }
+
+        function populateTable(data) {
+            const tbody = document.getElementById("siswa-tbody");
+            tbody.innerHTML = "";
+
+            if (!data.length) { // -> Memeriksa jika tidak ada data siswa
+                tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>Tidak ada data siswa</td></tr>";
+                return;
+            }
+
+            data.forEach((s, i) => { // -> Melakukan perulangan untuk setiap data siswa (s) dengan indeks (i)
+                const row = tbody.insertRow();
+                row.setAttribute('data-nis', s.nis);
+                row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${s.nis}</td>
+                    <td>${s.nama_lengkap || s.nama}</td>
+                    <td>${s.kelas || '-'}</td>
+                    <td>${s.jenis_kelamin || '-'}</td>
+                    <td><span class="badge badge-${s.status === 'Aktif' ? 'success' : 'danger'}">${s.status || '-'}</span></td>
+                    <td>
+                        <a href="updateSiswa.html?id=${s.nis}" class="btn btn-warning">Edit</a>
+                        <button class="btn btn-danger" onclick="confirmDelete('${s.nis}')">Hapus</button>
+                    </td>
+                `;
+            });
+        }
+
+
+        function highlightUpdatedRow(nis) {
+            const row = document.querySelector(`tr[data-nis='${nis}']`);
+            if (!row) return;
+
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.style.backgroundColor = '#ffeb3b';
+
+            setTimeout(() => {
+                row.style.transition = 'background-color 1s';
+                row.style.backgroundColor = '';
+            }, 1000);
+        }
+
+        function showUpdateNotification() {
+            if (document.getElementById('update-notification')) return;
+
+            const note = document.createElement('div');
+            note.id = 'update-notification';
+            Object.assign(note.style, {
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                padding: '15px',
+                borderRadius: '5px',
+                zIndex: '1000',
+                boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+            });
+
+            note.textContent = "Data Siswa berhasil di Update";
+            document.body.appendChild(note);
+
+            setTimeout(() => {
+                note.style.opacity = '0';
+                note.style.transition = 'opacity 0.5s';
+                setTimeout(() => note.remove(), 500);
+            }, 3000);
+        }
+
+        window.forceRefreshData = () => loadSiswaData(true);
+        window.confirmDelete = confirmDelete; // -> fungsi global confirmDelete
+
+
+        function formatRole(role) {
+            if (!role) return '';
+            return role.charAt(0).toUpperCase() + role.slice(1);
+        }
+
+        function setupLogout() {
+            const logoutLink = document.querySelector('.sidebar-menu li a[href="../opening/login.html"]');
+            if (!logoutLink) return;
+
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                fetch(`${BASE_URL}/api/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                }).finally(() => {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    window.location.href = '../opening/login.html';
+                });
+            });
+        }
+
+        function checkAuthAndDisplayUser() {
+            const userDataStr = localStorage.getItem('user');
+            if (!userDataStr) {
+                window.location.href = '../opening/login.html';
+                return;
+            }
+
+            try {
+                const userData = JSON.parse(userDataStr);
+                const userRoleElement = document.querySelector('.user-role');
+                if (userRoleElement) {
+                    const displayName = userData.fullname || userData.name || userData.username || 'User';
+                    userRoleElement.textContent = `${displayName} (${formatRole(userData.role)})`;
+                }
+                setupLogout();
+            } catch (e) {
+                console.error('Error:', e);
+                window.location.href = '../opening/login.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthAndDisplayUser();
+            // Kalau ada fungsi lain yang mau dijalankan saat load halaman, panggil di sini juga
+        });
+</script>
+</body>
+</html>

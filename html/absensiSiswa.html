@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Absensi Siswa - Absensi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            position: relative;
+            min-height: 100vh;
+            transition: margin-right 0.3s;
+        }
+        .body-shifted {
+            margin-right: 250px;
+        }
+        .container {
+            padding: 20px;
+        }
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .menu-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            color: #555;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+        .menu-item.active {
+            background-color: #e0f0ff;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .menu-item i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: #2ecc71;
+        }
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+        }
+        .search-container select,
+        .search-container input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            outline: none;
+        }
+        .search-container button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            transition: right 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        .sidebar.open {
+            right: 0;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        .sidebar-menu li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        .sidebar-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s;
+        }
+        .sidebar-menu a:hover {
+            color: #3498db;
+        }
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #3d5166;
+        }
+        .hamburger {
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #ecf0f1;
+            background-color: #34495e;
+            margin-bottom: 20px;
+        }
+        .user-role {
+            margin-left: 8px;
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .radio-label input {
+            margin-right: 5px;
+        }
+        .date-picker {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    
+    <header>
+        <h2>Sistem Absensi Siswa</h2>
+        <div class="hamburger" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu Navigasi</h3>
+        </div>
+        <div class="user-info">
+            <span>Login sebagai:</span>
+            <span class="user-role"></span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboardGuru.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li><a href="abensiSiswa.html"><i class="fa fa-calendar-check"></i> Absensi Siswa</a></li>
+            <li><a href="riwayatAbsensi.html"><i class="fa fa-history"></i> Riwayat Absensi</a></li>
+            <li><a href="#"><i class="fa fa-users"></i> Manajemen Siswa</a></li>
+            <li><a href="manajemenKelas.html"><i class="fa fa-building"></i> Manajemen Kelas</a></li>
+            <li><a href="../opening/login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 Sistem Absensi</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="menu-wrapper">
+            <a href="dashboardGuru.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                Dashboard
+            </a>
+            <a href="absensiSiswa.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                Absensi Siswa
+            </a>
+            <a href="riwayatAbsensi.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                Riwayat Absensi
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Pengisian Absensi Siswa</h3>
+                <div>
+                    <input type="date" class="date-picker" id="tanggal-absensi" value="2025-04-30">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="search-container">
+                    <select id="kelas-filter">
+                        <option value="">Pilih Kelas...</option>
+                        <option value="X-A">X-A</option>
+                        <option value="X-B">X-B</option>
+                        <option value="XI-A">XI-A</option>
+                        <option value="XI-B">XI-B</option>
+                        <option value="XII-A">XII-A</option>
+                        <option value="XII-B">XII-B</option>
+                    </select>
+                    <button id="search-btn" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                        Tampilkan
+                    </button>
+                </div>
+                <table id="absensi-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>NIS</th>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Status Kehadiran</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- dari js -->
+                    </tbody>
+                </table>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button id="submit-absensi" class="btn btn-success">Simpan Absensi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        const hamburger = document.getElementById('hamburger-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const body = document.body;
+
+        hamburger.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+            body.classList.toggle('body-shifted');
+        });
+
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            overlay.style.display = 'none';
+            body.classList.remove('body-shifted');
+        });
+
+        // Set tanggal default ke hari ini
+        document.getElementById('tanggal-absensi').valueAsDate = new Date();
+        // const BASE_URL = 'https://project-damarq2ccos4.et.r.appspot.com';
+        function loadSiswa() {
+            const kelas = document.getElementById('kelas-filter').value;
+            const submitBtn = document.getElementById('submit-absensi');
+            const tbody = document.querySelector('#absensi-table tbody');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Memuat...';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Memuat data...</td></tr>';
+            
+            let url = 'http://localhost:3000/api/absen/siswa';
+            if (kelas) {
+                url += '?kelas=' + encodeURIComponent(kelas);
+            }
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true); // -> hxr -> HMLHttpRequest
+            xhr.withCredentials = true;
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        var result = JSON.parse(xhr.responseText);
+                        console.log('Response result:', result);
+                        
+                        if (Array.isArray(result)) {
+                            // Filter siswa berdasarkan status aktif
+                            const activeSiswa = result.filter(siswa => 
+                                siswa.status === 'Aktif'
+                            );
+                            renderStudents(activeSiswa);
+                            submitBtn.disabled = activeSiswa.length === 0;
+                        } else if (result.success && Array.isArray(result.data)) {
+                            // Filter siswa dari result.data yang aktif
+                            const activeSiswa = result.data.filter(siswa => 
+                                siswa.status === 'Aktif'
+                            );
+                            renderStudents(activeSiswa);
+                            submitBtn.disabled = activeSiswa.length === 0;
+                        } else {
+                            throw new Error(result.error || 'Gagal memuat data siswa');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Gagal memproses data: ' + error.message);
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red">Error: ' + error.message + '</td></tr>';
+                    }
+                } else {
+                    console.error('HTTP Error:', xhr.status);
+                    alert('HTTP Error: ' + xhr.status);
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red">HTTP Error: ' + xhr.status + '</td></tr>';
+                }
+                
+                submitBtn.textContent = 'Simpan Absensi';
+            };
+            
+            xhr.onerror = function() {
+                console.error('Network Error');
+                alert('Network Error: Tidak dapat terhubung ke server');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red">Network Error</td></tr>';
+                submitBtn.textContent = 'Simpan Absensi';
+            };
+            xhr.send();
+        }
+
+        // Render data siswa ke dalam tabel 
+        function renderStudents(students) {
+            const tbody = document.querySelector('#absensi-table tbody');
+            tbody.innerHTML = '';
+            
+            if (!students || students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Tidak ada siswa aktif yang ditemukan</td></tr>';
+                return;
+            }
+            
+            students.forEach((siswa, index) => {
+                // Siswa tidak aktif sudah difilter di loadSiswa()
+                var row = tbody.insertRow();
+                row.innerHTML = 
+                    `<td>${index + 1}</td>
+                    <td>${siswa.nis || ''}</td>
+                    <td>${siswa.nama_lengkap || siswa.nama || ''}</td>
+                    <td>${siswa.kelas || ''}</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="status-${siswa.nis}" value="hadir" checked> Hadir</label>
+                            <label class="radio-label"><input type="radio" name="status-${siswa.nis}" value="izin"> Izin</label>
+                            <label class="radio-label"><input type="radio" name="status-${siswa.nis}" value="sakit"> Sakit</label>
+                            <label class="radio-label"><input type="radio" name="status-${siswa.nis}" value="alpha"> Alpha</label>
+                        </div>
+                    </td>
+                    <td><input type="text" placeholder="Keterangan" id="keterangan-${siswa.nis}" class="form-control"></td>`;
+            });
+        }
+
+        // Submit absensi 
+        document.getElementById('submit-absensi').addEventListener('click', function() {
+            const tanggal = document.getElementById('tanggal-absensi').value;
+            const kelas = document.getElementById('kelas-filter').value;
+            const submitBtn = this;
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Token tidak ditemukan. Silakan login ulang.');
+                window.location.href = '../opening/login.html';
+                return;
+            }
+
+
+            if (!kelas) {
+                alert('Pilih kelas terlebih dahulu!');
+                return;
+            }
+
+            if (!tanggal) {
+                alert('Tanggal absensi tidak valid!');
+                return;
+            }
+
+            // Collect data
+            var absensi = [];
+            var table = document.getElementById('absensi-table');
+            var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            // Check if there are students to process
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
+                alert('Tidak ada data siswa untuk disimpan!');
+                return;
+            }
+            
+            for (var i = 0; i < rows.length; i++) {
+                // Skip rows that might be error messages
+                if (rows[i].cells.length < 6) continue;
+                
+                var nis = rows[i].cells[1].textContent.trim();
+                var nama = rows[i].cells[2].textContent.trim();
+                var kelasSiswa = rows[i].cells[3].textContent.trim();
+                
+                var statusRadios = rows[i].querySelectorAll('input[type="radio"]');
+                var status = '';
+                for (var j = 0; j < statusRadios.length; j++) {
+                    if (statusRadios[j].checked) {
+                        status = statusRadios[j].value;
+                        break;
+                    }
+                }
+                
+                var keterangan = rows[i].querySelector('input[type="text"]').value.trim();
+                
+                if (!nis || !nama || !kelasSiswa || !status) {
+                    console.warn('Data tidak lengkap untuk siswa:', {nis, nama, kelasSiswa, status});
+                    continue; 
+                }
+                
+                absensi.push({
+                    nis: nis,
+                    nama: nama,
+                    kelas: kelasSiswa,
+                    status: status,
+                    keterangan: keterangan || null
+                });
+            }
+            
+            if (absensi.length === 0) {
+                alert('Tidak ada data siswa valid untuk disimpan!');
+                return;
+            }
+            
+            let formattedDate = tanggal;
+            if (tanggal.includes('/')) {
+                const parts = tanggal.split('/');
+                formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // DD/MM/YYYY ke YYYY-MM-DD
+            }
+            
+            const dataToSend = {
+                tanggal: formattedDate,
+                absensi: absensi
+            };
+            
+            console.log('Data yang akan dikirim:', dataToSend);
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+            
+            const apiUrl = 'http://localhost:3000/api/absen/tambah';
+            console.log('Saving attendance to:', apiUrl);
+            
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${token}` // kirim token
+                },
+                body: JSON.stringify(dataToSend),
+                credentials: 'include'
+            })
+            .then(response => {
+                console.log('Status response:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        try {
+                            // parse sebagai JSON
+                            const errorJson = JSON.parse(text);
+                            console.error('Response error body:', errorJson);
+                            throw new Error(`Server error ${response.status}: ${errorJson.error || errorJson.detail || response.statusText}`);
+                        } catch (e) {
+                            // Jika bukan JSON, text biasa
+                            console.error('Response error body:', text);
+                            throw new Error(`Server error ${response.status}: ${text || response.statusText}`);
+                        }
+                    });
+                }
+                return response.json();
+            })
+            .then(result => {
+                console.log('Response result:', result);
+                
+                if (!result.success) {
+                    throw new Error(result.error || result.detail || 'Gagal menyimpan absen');
+                }
+                
+                alert('Absensi berhasil disimpan!');
+                loadSiswa();
+            })
+            .catch(error => {
+                console.error('Error dalam proses simpan:', error);
+                alert('Gagal menyimpan data: ' + error.message);
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Simpan Absensi';
+            });
+        });
+
+        document.getElementById('search-btn').addEventListener('click', loadSiswa);
+        // untuk dropdown kelas 
+        document.getElementById('kelas-filter').addEventListener('change', function() {
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSiswa();
+        }); 
+        function formatRole(role) {
+            if (!role) return '';
+            return role.charAt(0).toUpperCase() + role.slice(1);
+        }
+
+        function setupLogout() {
+            const logoutLink = document.querySelector('.sidebar-menu li a[href="../opening/login.html"]');
+            if (!logoutLink) return;
+
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                fetch('http://localhost:3000/api/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                }).finally(() => {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    window.location.href = '../opening/login.html';
+                });
+            });
+        }
+
+        function checkAuthAndDisplayUser() {
+            const userDataStr = localStorage.getItem('user');
+            if (!userDataStr) {
+                window.location.href = '../opening/login.html';
+                return;
+            }
+
+            try {
+                const userData = JSON.parse(userDataStr);
+                const userRoleElement = document.querySelector('.user-role');
+                if (userRoleElement) {
+                    const displayName = userData.fullname || userData.name || userData.username || 'User';
+                    userRoleElement.textContent = `${displayName} (${formatRole(userData.role)})`;
+                }
+                setupLogout();
+            } catch (e) {
+                console.error('Error:', e);
+                window.location.href = '../opening/login.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthAndDisplayUser();
+            // Kalau ada fungsi lain yang mau dijalankan saat load halaman, panggil di sini juga
+        });
+    </script>
+</body>
+</html>

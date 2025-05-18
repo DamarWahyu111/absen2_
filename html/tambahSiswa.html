@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Siswa - Sistem Absensi Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            position: relative;
+            min-height: 100vh;
+            transition: margin-right 0.3s;
+        }
+        .body-shifted {
+            margin-right: 250px;
+        }
+        .container {
+            padding: 20px;
+        }
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .menu-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            color: #555;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+        .menu-item.active {
+            background-color: #e0f0ff;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .menu-item i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: #2ecc71;
+        }
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        .radio-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            transition: right 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        .sidebar.open {
+            right: 0;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        .sidebar-menu li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #3d5166;
+        }
+        .sidebar-menu li:last-child {
+            border-bottom: none;
+        }
+        .sidebar-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s;
+        }
+        .sidebar-menu a:hover {
+            color: #3498db;
+        }
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #3d5166;
+        }
+        .hamburger {
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #ecf0f1;
+            background-color: #34495e;
+            margin-bottom: 20px;
+        }
+        .user-role {
+            margin-left: 8px;
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+        </style>
+</head>
+<div class="overlay" id="overlay"></div>
+    
+    <header>
+        <h2>Sistem Absensi Siswa</h2>
+        <div class="hamburger" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu Navigasi</h3>
+        </div>
+        <div class="user-info">
+            <span>Login sebagai:</span>
+            <span class="user-role"></span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboardGuru.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li><a href="absensiSiswa.html"><i class="fa fa-calendar-check"></i> Absensi Siswa</a></li>
+            <li><a href="riwayatAbsensi.html"><i class="fa fa-history"></i> Riwayat Absensi</a></li>
+            <li><a href="#"><i class="fa fa-users"></i> Manajemen Siswa</a></li>
+            <li><a href="#"><i class="fa fa-building"></i> Manajemen Kelas</a></li>
+            <li><a href="../opening/login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 Sistem Absensi</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="menu-wrapper">
+            <a href="dashboardGuru.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                Dashboard
+            </a>
+            <a href="absensiSiswa.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                Absensi Siswa
+            </a>
+            <a href="riwayatAbsensi.html" class="menu-item">
+                <div class="menu-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                Riwayat Absensi
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Tambah Siswa Baru</h3>
+                <a href="dashboardGuru.html" class="btn">Kembali</a>
+            </div>
+            <div class="card-body">
+                <form id="form-siswa" method="post">
+                    <div class="form-group">
+                        <label for="nis">NIS</label>
+                        <input type="text" class="form-control" id="nis" name="nis" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="nama" name="nama_lengkap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kelas">Kelas</label>
+                        <select class="form-control" id="kelas" name="kelas" required>
+                            <option value="">-- Pilih Kelas --</option>
+                            <option value="X-A">X-A</option>
+                            <option value="X-B">X-B</option>
+                            <option value="XI-A">XI-A</option>
+                            <option value="XI-B">XI-B</option>
+                            <option value="XII-A">XII-A</option>
+                            <option value="XII-B">XII-B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Kelamin</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="jenis_kelamin" value="Laki-laki" required> Laki-laki
+                            </label>
+                            <label>
+                                <input type="radio" name="jenis_kelamin" value="Perempuan"> Perempuan
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="alamat">Alamat</label>
+                        <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="telp">Nomor Telepon</label>
+                        <input type="tel" class="form-control" id="telp" name="no_telepon" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tempat_lahir">Tempat Lahir</label>
+                        <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_lahir">Tanggal Lahir</label>
+                        <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nama_ortu">Nama Orang Tua/Wali</label>
+                        <input type="text" class="form-control" id="nama_ortu" name="nama_orangtua" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telp_ortu">Nomor Telepon Orang Tua/Wali</label>
+                        <input type="tel" class="form-control" id="telp_ortu" name="no_telepon_orangtua" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="Cuti">Cuti</option>
+                            <option value="Tidak Aktif">Tidak Aktif</option>
+                            <option value="Pindah">Pindah</option>
+                            <option value="Keluar">Keluar</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="reset" class="btn btn-danger">Reset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const hamburger = document.getElementById('hamburger-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const body = document.body;
+
+        hamburger.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+            body.classList.toggle('body-shifted');
+        });
+
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            overlay.style.display = 'none';
+            body.classList.remove('body-shifted');
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const formSiswa = document.getElementById("form-siswa");
+            
+            // Tambahkan validasi untuk input tanggal lahir
+            const tanggalLahirInput = document.querySelector('input[name="tanggal_lahir"]');
+            
+            if (tanggalLahirInput) {
+                const originalDateName = tanggalLahirInput.name;
+                const originalDateId = tanggalLahirInput.id;
+            
+                tanggalLahirInput.style.display = 'none';
+                
+                //buat container untuk input custom
+                const customDateContainer = document.createElement('div');
+                customDateContainer.className = 'custom-date-container';
+                customDateContainer.style.display = 'flex';
+                customDateContainer.style.gap = '10px';
+                
+                const labelElement = document.createElement('label');
+                labelElement.style.marginRight = '10px';
+                
+                //input untuk hari
+                const dayInput = document.createElement('select');
+                dayInput.id = 'day-input';
+                for (let i = 1; i <= 31; i++) {
+                    const option = document.createElement('option');
+                    option.value = i < 10 ? '0' + i : i;
+                    option.textContent = i;
+                    dayInput.appendChild(option);
+                }
+                
+                //input untuk bulan
+                const monthInput = document.createElement('select');
+                monthInput.id = 'month-input';
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                for (let i = 0; i < 12; i++) {
+                    const option = document.createElement('option');
+                    option.value = (i + 1) < 10 ? '0' + (i + 1) : (i + 1);
+                    option.textContent = months[i];
+                    monthInput.appendChild(option);
+                }
+                
+                //input untuk tahun
+                const yearInput = document.createElement('input');
+                yearInput.type = 'number';
+                yearInput.id = 'year-input';
+                yearInput.min = 2005;
+                yearInput.max = 2010;
+                yearInput.placeholder = 'Tahun (2005-2010)';
+                yearInput.style.width = '120px';
+                
+                yearInput.addEventListener('input', function() {
+                    const year = parseInt(this.value);
+                    
+                    // Hanya validasi jika pengguna sudah mengetik 4 digit
+                    if (this.value.length === 4) {
+                        if (year < 2005 || year > 2010) {
+                            alert('Tahun kelahiran harus antara 2005-2010');
+                            this.focus();
+                        }
+                    }
+                });
+                
+                // tambah semua elemen ke container
+                customDateContainer.appendChild(dayInput);
+                customDateContainer.appendChild(monthInput);
+                customDateContainer.appendChild(yearInput);
+                
+                //container setelah input tanggal asli
+                tanggalLahirInput.parentNode.insertBefore(labelElement, tanggalLahirInput);
+                tanggalLahirInput.parentNode.insertBefore(customDateContainer, tanggalLahirInput.nextSibling);
+                
+                //untuk memperbarui nilai input tanggal asli dari input custom
+                function updateOriginalDateInput() {
+                    const day = dayInput.value;
+                    const month = monthInput.value;
+                    const year = yearInput.value;
+                    
+                    if (year >= 2005 && year <= 2010 && year.toString().length === 4) {
+                        tanggalLahirInput.value = `${year}-${month}-${day}`;
+                    }
+                }
+                
+                //event listener untuk memperbarui input tanggal asli saat input custom berubah
+                dayInput.addEventListener('change', updateOriginalDateInput);
+                monthInput.addEventListener('change', updateOriginalDateInput);
+                yearInput.addEventListener('input', function() {
+                    if (this.value.length === 4) {
+                        updateOriginalDateInput();
+                    }
+                });
+            }
+            const userDataStr = localStorage.getItem('user');
+            if (!userDataStr) {
+                alert('Akses tidak sah. Silakan login kembali.');
+                window.location.href = '../opening/login.html';
+                return;
+            }
+
+            if (formSiswa) {
+                formSiswa.addEventListener("submit", function(event) {
+                    event.preventDefault(); 
+                    const form = new FormData(this);
+                    const data = {};
+
+                    // validasi check tanggal lahir -> hanya 2005-2010
+                    const tanggalLahir = form.get('tanggal_lahir');
+                    if (tanggalLahir) {
+                        const tahunLahirDate = new Date(tanggalLahir);
+                        const year = tahunLahirDate.getFullYear();
+                        
+                        if (year < 2005 || year > 2010) {
+                            alert("Tahun kelahiran harus antara 2005-2010");
+                            
+                            // Focus ke input tanggal lahir untuk memudahkan koreksi
+                            document.querySelector('input[name="tanggal_lahir"]').focus();
+                            return; // Hentikan submit-form jika tidak valid
+                        }
+                    }
+                    // Extract NIS separately so we can use it for redirect
+                    let nis = '';
+                    
+                    form.forEach((value, key) => {
+                        data[key] = value;
+                        if (key === 'nis') {
+                            nis = value;
+                        }
+                    });
+                    
+                    console.log("Sending data:", data);
+                    console.log("NIS:", nis);
+                    
+                    fetch('http://localhost:3000/api/siswa/tambah', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // 'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data),
+                        credentials: 'include',
+                    })
+                    .then(response => {
+                        if (response.status === 401) {
+                            alert('Sesi Anda sudah habis. Silakan login ulang.');
+                            localStorage.removeItem('user');
+                            localStorage.removeItem('token');
+                            window.location.href = '../opening/login.html';
+                            return;
+                        }
+                        if (!response.ok) {
+                            throw new Error('Server returned status: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Response:", data); 
+                        if (data.message && data.message.toLowerCase().includes('berhasil')) {
+                            alert(data.message);
+                            
+                            // Set flag in sessionStorage that data was updated
+                            sessionStorage.setItem('dataUpdated', 'true');
+                            
+                            // Redirect to dashboard with necessary parameters
+                            window.location.href = 'dashboardSiswa.html?update=success&nis=' + nis + '&timestamp=' + new Date().getTime();
+                        } else {
+                            alert('Terjadi kesalahan saat menyimpan data: ' + (data.message || 'Unknown error'));
+                            console.warn("Isi response:", data);
+                        }
+                    })
+                    .catch((error) => {
+                        alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
+                        console.error('Error:', error);
+                    });
+                });
+            } else {
+                console.warn("Form siswa tidak ditemukan di halaman ini");
+            }
+        });
+
+        function formatRole(role) {
+            if (!role) return '';
+            return role.charAt(0).toUpperCase() + role.slice(1);
+        }
+
+        function setupLogout() {
+            const logoutLink = document.querySelector('.sidebar-menu li a[href="../opening/login.html"]');
+            if (!logoutLink) return;
+
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                fetch('http://localhost:3000/api/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                }).finally(() => {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    window.location.href = '../opening/login.html';
+                });
+            });
+        }
+
+        function checkAuthAndDisplayUser() {
+            const userDataStr = localStorage.getItem('user');
+            if (!userDataStr) {
+                window.location.href = '../opening/login.html';
+                return;
+            }
+
+            try {
+                const userData = JSON.parse(userDataStr);
+                const userRoleElement = document.querySelector('.user-role');
+                if (userRoleElement) {
+                    const displayName = userData.fullname || userData.name || userData.username || 'User';
+                    userRoleElement.textContent = `${displayName} (${formatRole(userData.role)})`;
+                }
+                setupLogout();
+            } catch (e) {
+                console.error('Error:', e);
+                window.location.href = '../opening/login.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthAndDisplayUser();
+            // Kalau ada fungsi lain yang mau dijalankan saat load halaman, panggil di sini juga
+        });
+
+    </script>
+</body>
+</html>
